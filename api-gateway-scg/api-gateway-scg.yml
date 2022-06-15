@@ -4,3 +4,28 @@ spring:
   profiles:
     active:
       default
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      default-filters:
+        - RewritePath=/api/*/(?<path>.*),/$\{path}
+        - name: GlobalFilter
+          args:
+            baseMessage: Spring Cloud Gateway GlobalFilter
+            preLogger: true
+            postLogger: true
+      routes:
+        - id: service1-A # 라우팅의 고유 ID (서비스의 ID가 아님)
+          uri: lb://service1
+          predicates:
+            - Path=/api/service1/**
+          filters:
+            - RewritePath=/service1/(?<path>.*),/$\{path}
+            - name: Service1Filter
+              args:
+                baseMessage: Spring Cloud Gateway Service1Filter
+                preLogger: true
+                postLogger: true
