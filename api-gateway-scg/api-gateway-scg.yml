@@ -29,6 +29,18 @@ spring:
                 baseMessage: Spring Cloud Gateway Service1Filter
                 preLogger: true
                 postLogger: true
+        - id: service2-A # 라우팅의 고유 ID (서비스의 ID가 아님)
+          uri: lb://service2
+          predicates:
+            - Path=/api/service2/**
+          filters:
+            - RewritePath=/service2/(?<path>.*),/$\{path}
+            - name: Service2Filter
+              args:
+                baseMessage: Spring Cloud Gateway Service2Filter
+                preLogger: true
+                postLogger: true
+
 
 eureka:
   instance:
